@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -27,34 +28,14 @@ public class Controller {
     @FXML
     Label totalPriceLabel;
 
-    private CalculatorModel model = new CalculatorModel();
+    private static  CalculatorModel model = new CalculatorModel("English");
 
     @FXML public void handleLanguageConfirmed(){
         String selectedLanguage = languageSelectMenu.getValue();
-        Locale locale = null;
-        switch (selectedLanguage){
-            case "English":
-                locale = new Locale("en", "US");
-                break;
-            case "Finnish":
-                locale = new Locale("fi", "FI");
-                break;
-            case "Swedish":
-                locale = new Locale("sv", "SE");
-                break;
-            case "Arabic":
-                locale = new Locale("ar", "SA");
-                break;
-            case "Japanese":
-                locale = new Locale("ja", "JP");
-                break;
-            default:
-                locale = new Locale("en", "US");
-                break;
-        }
+        model.setLanguage(selectedLanguage);
 
         try{
-            MainApp.setRoot("lang.MessagesBundle", locale);
+            MainApp.setRoot(selectedLanguage);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -74,7 +55,7 @@ public class Controller {
         }
     }
 
-    @FXML public void handleCalculate(){
+    @FXML public void handleCalculate() throws SQLException {
         List<CalculatorModel.Item> items = new ArrayList<>();
         for(Node node: itemsContainer.getChildren()){
             if(node instanceof HBox row){
@@ -97,6 +78,7 @@ public class Controller {
         }
         double total = model.calculateTotal(items);
         totalPriceLabel.setText(String.format("%.2f", total));
+        CartService.saveCartRecords(model, items);
     }
 
 

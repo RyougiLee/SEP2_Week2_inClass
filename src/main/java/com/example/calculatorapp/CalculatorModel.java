@@ -3,6 +3,31 @@ package com.example.calculatorapp;
 import java.util.List;
 
 public class CalculatorModel {
+
+    private int totalItems;
+    private double totalCost;
+    private String language;
+
+    public CalculatorModel(String language){
+        this.language = language;
+    }
+
+    public int getTotalItems(){
+        return totalItems;
+    }
+
+    public double getTotalCost(){
+        return totalCost;
+    }
+
+    public String getLanguage(){
+        return language;
+    }
+
+    public void setLanguage(String language){
+        this.language = language;
+    }
+
     public double calculateItemCost(double quantity, double unitPrice) {
         if (quantity < 0 || unitPrice < 0) {
             return 0;
@@ -12,9 +37,13 @@ public class CalculatorModel {
 
     public double calculateTotal(List<Item> items) {
         double total = 0;
+        int itemNumber = 0;
         for (Item item : items) {
             total += calculateItemCost(item.getQuantity(), item.getUnitPrice());
+            itemNumber += (int) item.getQuantity();
         }
+        totalItems = itemNumber;
+        totalCost = total;
         return total;
     }
 

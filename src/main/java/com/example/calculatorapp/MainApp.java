@@ -2,6 +2,8 @@ package com.example.calculatorapp;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.NodeOrientation;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -15,13 +17,19 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         primaryStage = stage;
-        setRoot("lang.MessagesBundle", Locale.getDefault());
+        setRoot("English");
     }
 
-    public static void setRoot(String bundleName, Locale locale) throws Exception{
-        ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
+    public static void setRoot(String selectedLanguage) throws Exception{
+        ResourceBundle bundle = new DbResourceBundle(selectedLanguage);
         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/example/calculatorapp/main-view.fxml"), bundle);
-        Scene scene = new Scene(loader.load());
+        Parent root = loader.load();
+        if("Arabic".equals(selectedLanguage)){
+            root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+        } else {
+            root.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+        }
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Zongru Li / Calculator");
         primaryStage.show();
